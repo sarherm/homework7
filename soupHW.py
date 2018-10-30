@@ -42,57 +42,37 @@ def followLinks(url, numAnchor, numTimes):
         numAnchor -- the position of the anchor (a tag) you are looking at on the page - the first link is position 1
         numTimes -- the number of times to repeat the process of finding the new url
     """
-    #ctx = ssl.create_default_context()
-    #ctx.check_hostname = False 
-    #ctx.verify_mode = ssl.CERT_NONE
+
+    ctx = ssl.create_default_context()
+    ctx.check_hostname = False 
+    ctx.verify_mode = ssl.CERT_NONE
     
-    #html = urlopen(url, context = ctx).read()
-   
-    #name_list = []
-    #for x in range(numTimes):
-        #beautiful_soup = BeautifulSoup(html, "html.parser")
-       # a_tags = beautiful_soup.find_all('a')
+    html = urlopen(url, context = 'ctx').read()
+    name_list = []
+
+    for x in range(numTimes):
+        beautiful_soup = BeautifulSoup(html, "html.parser")
+        a_tags = beautiful_soup.find_all('a')
         
-        
-       # link = a_tags[numAnchor -1]
-       # name_list.append(link.text)
-        #new_url = url + link.get('href')
+        link = a_tags[numAnchor - 1]
+        name_list.append(link.text)
+        new_url = url + link.get('href')
 
-       # html = urlopen(new_url, context = ctx).read()
-    #return name_list[-1]
+        html = urlopen(new_url, context = ctx).read()
+    return name_list[-1]
 
 
-    pass
+
+    #pass
 
 def getGradeHistogram(url):
     """ return a sorted tuple with the grade range (such as 90, 80, etc) and the number of grades in that range
         url -- a uniform resource locator - address for a web page
     """
-    #grades = {}
-    #ctx = ssl.create_default_context()
-   # ctx.check_hostname = False 
-    #ctx.verify_mode = ssl.CERT_NONE
-    
-   # html = urlopen(url, context = ctx).read()
-   # beautiful_soup = BeautifulSoup(html, "html.parser")
-   # span_tags = beautiful_soup.find_all('span')
-   # for x in span_tags:
-       # numbers = re.findall(r'\b\d+\b', x.text)
-        #for x in numbers:
-         #   if len(x) > 1:
-         #       grade_range = int(x[0]) * 10 
-          #  else: 
-          #      grade_range = 0 
-           # if grade_range not in grades:
-                #grades[grade_range] = 1 
-           # else: 
-               # grades[grade_range] += 1
 
-    #tuple_list = list(grades.items())
-   # sorted_list = sorted(tuple_list, reverse = True)
-   # return sorted_list 
+    
             
-    pass
+    #pass
 
 
 class TestHW7(unittest.TestCase):
