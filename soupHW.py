@@ -70,7 +70,29 @@ def getGradeHistogram(url):
         url -- a uniform resource locator - address for a web page
     """
 
+    grades = {}
+    ctx = ssl.create_default_context()
+    ctx.check_hostname = False 
+    ctx.verify_mode = ssl.CERT_NONE
     
+    html = urlopen(url, context = ctx).read()
+    beautiful_soup = BeautifulSoup(html, "html.parser")
+    span_tags = beautiful_soup.find_all('span')
+    for x in span_tags:
+        numbers = re.findall(r'\b\d+\b', x.text)
+        for x in numbers:
+            if len(x) > 1:
+                grade_range = int(x[0]) * 10 
+            else: 
+                grade_range = 0 
+            if grade_range not in grades:
+                grades[grade_range] = 1 
+            else: 
+                grades[grade_range] += 1
+
+    tuple_list = list(grades.items())
+    sorted_list = sorted(tuple_list, reverse = True)
+    return sorted_list 
             
     #pass
 
@@ -89,8 +111,8 @@ class TestHW7(unittest.TestCase):
     def test_followLinks2(self):
         self.assertEqual(followLinks("http://py4e-data.dr-chuck.net/known_by_Charlie.html",18,7), "Shannah")
 
-    #def test_getGradeHistogram(self):
-        #self.assertEqual(getGradeHistogram("http://py4e-data.dr-chuck.net/comments_42.html"), [(90, 4), (80, 4), (70, 7), (60, 7), (50, 6), (40, 3), (30, 5), (20, 4), (10, 6), (0, 4)])
+    def test_getGradeHistogram(self):
+        self.assertEqual(getGradeHistogram("http://py4e-data.dr-chuck.net/comments_42.html"), [(90, 4), (80, 4), (70, 7), (60, 7), (50, 6), (40, 3), (30, 5), (20, 4), (10, 6), (0, 4)])
 
 
 unittest.main(verbosity=2)
